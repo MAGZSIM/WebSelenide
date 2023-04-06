@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/g6vvu3o9vyooj8t5?svg=true)](https://ci.appveyor.com/project/MAGZSIM/webselenide)
