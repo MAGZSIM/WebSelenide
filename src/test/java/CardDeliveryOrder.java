@@ -18,6 +18,10 @@ import static java.util.Calendar.getInstance;
 
 public class CardDeliveryOrder {
 
+    public String generateDate (int days) {
+        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
     @Test
     public void fillingForm() {
         Configuration.holdBrowserOpen = true; //позволяет не закрывать браузер после открытия
@@ -26,18 +30,14 @@ public class CardDeliveryOrder {
         open("http://localhost:9999");
         $x("//span [@data-test-id = 'city'] //input").setValue("Москва");
         $x("//span [@data-test-id = 'date'] //input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        Calendar instance = getInstance();
-        instance.setTime(getInstance().getTime()); //устанавливаем дату, с которой будет производить операции
-        instance.add(Calendar.DAY_OF_MONTH, 4);
-        String newDate = dateFormat.format(instance.getTime());
-        $x("//span [@data-test-id='date'] //input").sendKeys(newDate);
+        String planningDate = generateDate(4);
+        $x("//span [@data-test-id='date'] //input").sendKeys(planningDate);
         $x("//span [@data-test-id='name'] //input").setValue("Пирожков Артур");
         $x("//span [@data-test-id='phone'] //input").setValue("+79261234567");
         $x("//label [@data-test-id='agreement']").click();
         $x("//span [@class = 'button__text']").click();
         $x("//div [@class = 'notification__content']")
                 .shouldBe(Condition.visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.exactText("Встреча успешно забронирована на " + newDate));
+                .shouldHave(Condition.exactText("Встреча успешно забронирована на " + planningDate));
     }
 }
